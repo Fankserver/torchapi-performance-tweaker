@@ -49,6 +49,8 @@ namespace PerformanceTweaker
         {
             base.Detach();
 
+            _largeTurretBaseSlowdown.Clear();
+
             _patchManager.FreeContext(_ctx);
         }
 
@@ -68,11 +70,13 @@ namespace PerformanceTweaker
                 return true;
 
             int value = _largeTurretBaseSlowdown.AddOrUpdate(__instance.EntityId, 1, (key, oldValue) => oldValue++);
-            if (TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactorType == 0 && value < (int)(1 - (TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor - Sync.ServerSimulationRatio) * tick))
+            if (TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactorType == 0
+                && Sync.ServerSimulationRatio < TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor
+                && value < (int)(Sync.ServerSimulationRatio / TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor) * tick)
                 return false;
             else if (TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactorType == 1
                 && Sync.ServerCPULoad - TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor > 0
-                && value < (TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor / Sync.ServerCPULoad) * tick)
+                && value >= (Sync.ServerCPULoad / TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor) * 100)
                 return false;
             _largeTurretBaseSlowdown[__instance.EntityId] = 0;
 
