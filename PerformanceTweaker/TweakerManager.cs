@@ -50,7 +50,6 @@ namespace PerformanceTweaker
             switch (state)
             {
                 case TorchSessionState.Loaded:
-
                     Task.Delay(3000).ContinueWith((t) =>
                     {
                         Log.Debug("Patching MyLargeTurretBasePatch");
@@ -58,7 +57,6 @@ namespace PerformanceTweaker
                         _ctx.GetPattern(MyLargeTurretBasePatch._updateAfterSimulation10).Prefixes.Add(MyLargeTurretBasePatch._throttler10);
                         _patchManager.Commit();
                     });
-
                     break;
             }
         }

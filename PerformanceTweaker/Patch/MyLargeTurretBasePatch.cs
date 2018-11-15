@@ -27,23 +27,18 @@ namespace PerformanceTweaker.Patch
         internal static readonly MethodInfo _throttler10 =
             typeof(MyLargeTurretBasePatch).GetMethod(nameof(MyLargeTurretBasePatch.Throttler10), BindingFlags.Static | BindingFlags.Public) ??
             throw new Exception("Failed to find patch method");
-        internal static readonly MethodInfo _transpilerForAfterUpdate1 =
-            typeof(MyLargeTurretBasePatch).GetMethod(nameof(MyLargeTurretBasePatch.TranspilerForAfterUpdate1), BindingFlags.Static | BindingFlags.Public) ??
-            throw new Exception("Failed to find patch method");
-        internal static readonly MethodInfo _transpilerForAfterUpdate10 =
-            typeof(MyLargeTurretBasePatch).GetMethod(nameof(MyLargeTurretBasePatch.TranspilerForAfterUpdate10), BindingFlags.Static | BindingFlags.Public) ??
-            throw new Exception("Failed to find patch method");
 
         public static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        public static bool Throttler1(MyLargeTurretBase __instance)
-        {
-            return Throttler(__instance, VRage.ModAPI.MyEntityUpdateEnum.EACH_FRAME, 100);
-        }
         public static void Close()
         {
             _largeTurretBaseSlowdown1.Clear();
             _largeTurretBaseSlowdown10.Clear();
+        }
+
+        public static bool Throttler1(MyLargeTurretBase __instance)
+        {
+            return Throttler(__instance, VRage.ModAPI.MyEntityUpdateEnum.EACH_FRAME, 100);
         }
 
         public static bool Throttler10(MyLargeTurretBase __instance)
@@ -53,7 +48,7 @@ namespace PerformanceTweaker.Patch
 
         public static bool Throttler(MyLargeTurretBase __instance, VRage.ModAPI.MyEntityUpdateEnum update, int tick)
         {
-            if (MySandboxGame.TotalTimeInMilliseconds < 60 * 1000 || __instance.Target != null || !TweakerPlugin.Instance.Config.LargeTurretBaseTweakEnabled)
+            if (__instance.Target != null || !TweakerPlugin.Instance.Config.LargeTurretBaseTweakEnabled)
                 return true;
 
             int value = 0;
@@ -62,13 +57,16 @@ namespace PerformanceTweaker.Patch
             else if (update == VRage.ModAPI.MyEntityUpdateEnum.EACH_10TH_FRAME)
                 value = _largeTurretBaseSlowdown10.AddOrUpdate(__instance.EntityId, 1, (key, oldValue) => oldValue++);
 
+            //if (update == VRage.ModAPI.MyEntityUpdateEnum.EACH_10TH_FRAME)
+            //    Log.Debug($"MyLargeTurretBase {__instance.Entity} tick {value}");
+
             if (TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactorType == 0
                 && Sync.ServerSimulationRatio < TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor
                 && value < (int)(Sync.ServerSimulationRatio / TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor) * tick)
                 return false;
             else if (TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactorType == 1
                 && Sync.ServerCPULoad - TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor > 0
-                && value >= (Sync.ServerCPULoad / TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor) * 100)
+                && value >= (Sync.ServerCPULoad / TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor) * tick)
                 return false;
 
             if (update == VRage.ModAPI.MyEntityUpdateEnum.EACH_FRAME)
@@ -76,75 +74,9 @@ namespace PerformanceTweaker.Patch
             else if (update == VRage.ModAPI.MyEntityUpdateEnum.EACH_10TH_FRAME)
                 _largeTurretBaseSlowdown10[__instance.EntityId] = 0;
 
+            //Log.Debug($"MyLargeTurretBase update {__instance.EntityId}");
+
             return false;
-        }
-
-        public static IEnumerable<MsilInstruction> TranspilerForAfterUpdate1(IEnumerable<MsilInstruction> instructions,
-            Func<Type, MsilLocal> __localCreator,
-            MethodBase __methodBase)
-        {
-            bool firstRun = false;
-            MsilLabel returnLabel = new MsilLabel();
-            foreach (var i in instructions)
-            {
-                if (i.OpCode == OpCodes.Ret)
-                {
-                    foreach (var label in i.Labels)
-                    {
-                        returnLabel = label;
-                        break;
-                    }
-                }
-            }
-            foreach (var i in instructions)
-            {
-                if (!firstRun)
-                {
-                    yield return i;
-                    yield return new MsilInstruction(OpCodes.Call).InlineValue(_throttler1);
-                    yield return new MsilInstruction(OpCodes.Brfalse).InlineTarget(returnLabel);
-                    yield return i;
-
-                    firstRun = true;
-                    continue;
-                }
-
-                yield return i;
-            }
-        }
-
-        public static IEnumerable<MsilInstruction> TranspilerForAfterUpdate10(IEnumerable<MsilInstruction> instructions,
-            Func<Type, MsilLocal> __localCreator,
-            MethodBase __methodBase)
-        {
-            bool firstRun = false;
-            MsilLabel returnLabel = new MsilLabel();
-            foreach (var i in instructions)
-            {
-                if (i.OpCode == OpCodes.Ret)
-                {
-                    foreach (var label in i.Labels)
-                    {
-                        returnLabel = label;
-                        break;
-                    }
-                }
-            }
-            foreach (var i in instructions)
-            {
-                if (!firstRun)
-                {
-                    yield return i;
-                    yield return new MsilInstruction(OpCodes.Call).InlineValue(_throttler10);
-                    yield return new MsilInstruction(OpCodes.Brfalse).InlineTarget(returnLabel);
-                    yield return i;
-
-                    firstRun = true;
-                    continue;
-                }
-
-                yield return i;
-            }
         }
     }
 }
