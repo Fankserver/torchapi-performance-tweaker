@@ -57,24 +57,19 @@ namespace PerformanceTweaker.Patch
             else if (update == VRage.ModAPI.MyEntityUpdateEnum.EACH_10TH_FRAME)
                 value = _largeTurretBaseSlowdown10.AddOrUpdate(__instance.EntityId, 1, (key, oldValue) => oldValue++);
 
-            //if (update == VRage.ModAPI.MyEntityUpdateEnum.EACH_10TH_FRAME)
-            //    Log.Debug($"MyLargeTurretBase {__instance.Entity} tick {value}");
-
             if (TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactorType == 0
                 && Sync.ServerSimulationRatio < TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor
                 && value < (int)(Sync.ServerSimulationRatio / TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor) * tick)
                 return false;
             else if (TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactorType == 1
-                && Sync.ServerCPULoad - TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor > 0
-                && value >= (Sync.ServerCPULoad / TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor) * tick)
+                && Sync.ServerCPULoad > TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor
+                && value < (Sync.ServerCPULoad / TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor) * tick)
                 return false;
 
             if (update == VRage.ModAPI.MyEntityUpdateEnum.EACH_FRAME)
                 _largeTurretBaseSlowdown1[__instance.EntityId] = 0;
             else if (update == VRage.ModAPI.MyEntityUpdateEnum.EACH_10TH_FRAME)
                 _largeTurretBaseSlowdown10[__instance.EntityId] = 0;
-
-            //Log.Debug($"MyLargeTurretBase update {__instance.EntityId}");
 
             return false;
         }
