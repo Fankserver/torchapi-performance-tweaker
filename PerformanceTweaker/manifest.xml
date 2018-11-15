@@ -1,0 +1,7 @@
+﻿<?xml version="1.0"?>
+<PluginManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>PerformanceTweaker</Name>
+  <Guid>76888457-1b32-4d1f-b208-8a3aef64fcfd</Guid>
+  <Repository>Fankserver/torchapi-performance-tweaker</Repository>
+  <Version>v0.0.0</Version>
+</PluginManifest>
