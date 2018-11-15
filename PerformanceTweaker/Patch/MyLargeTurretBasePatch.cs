@@ -71,7 +71,7 @@ namespace PerformanceTweaker.Patch
             else if (update == VRage.ModAPI.MyEntityUpdateEnum.EACH_10TH_FRAME)
                 _largeTurretBaseSlowdown10[__instance.EntityId] = 0;
 
-            return false;
+            return true;
         }
     }
 }
