@@ -42,6 +42,9 @@
     <Reference Include="Sandbox.Game">
       <HintPath>..\..\torch-discord-role-manager\GameBinaries\Sandbox.Game.dll</HintPath>
     </Reference>
+    <Reference Include="SpaceEngineers.Game">
+      <HintPath>..\..\torch-discord-role-manager\GameBinaries\SpaceEngineers.Game.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xaml" />

@@ -10,6 +10,18 @@
 		<Label FontWeight="Bold" FontSize="16" Content="MyLargeTurretBase:" />
 		<CheckBox Content="Enable" Margin="3" IsChecked="{Binding LargeTurretBaseTweakEnabled}" />
 
+		<StackPanel Orientation="Horizontal">
+			<ComboBox Width="120" SelectedIndex="{Binding LargeTurretBaseTweakFactorType}" Margin="3">
+				<ComboBoxItem Content="Sim Speed"/>
+				<ComboBoxItem Content="Sim CPU Load" IsSelected="True"/>
+			</ComboBox>
+			<Label Content="Threshold type"/>
+		</StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<TextBox TextWrapping="Wrap" Text="{Binding LargeTurretBaseTweakFactor}" Width="40" Margin="3"/>
+			<Label Content="Threshold factor"/>
+		</StackPanel>
+
 		<Label Height="20">
 			<LineBreak/>
 		</Label>

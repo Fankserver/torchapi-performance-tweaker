@@ -45,6 +45,9 @@ namespace PerformanceTweaker
             if (_config?.Data == null)
                 _config = new Persistent<TweakerConfig>(configFile, new TweakerConfig());
 
+            var pgmr = new TweakerManager(torch);
+            torch.Managers.AddManager(pgmr);
+
             Instance = this;
         }
     }
