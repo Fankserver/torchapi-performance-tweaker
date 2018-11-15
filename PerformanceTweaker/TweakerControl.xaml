@@ -13,7 +13,7 @@
 		<StackPanel Orientation="Horizontal">
 			<ComboBox Width="120" SelectedIndex="{Binding LargeTurretBaseTweakFactorType}" Margin="3">
 				<ComboBoxItem Content="Sim Speed"/>
-				<ComboBoxItem Content="Sim CPU Load" IsSelected="True"/>
+				<ComboBoxItem Content="Sim CPU Load"/>
 			</ComboBox>
 			<Label Content="Threshold type"/>
 		</StackPanel>
