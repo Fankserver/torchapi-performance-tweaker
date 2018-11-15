@@ -53,7 +53,7 @@ namespace PerformanceTweaker.Patch
 
         public static bool Throttler(MyLargeTurretBase __instance, VRage.ModAPI.MyEntityUpdateEnum update, int tick)
         {
-            if (__instance.Target != null || !TweakerPlugin.Instance.Config.LargeTurretBaseTweakEnabled || MySandboxGame.TotalTimeInMilliseconds < 60 * 1000)
+            if (MySandboxGame.TotalTimeInMilliseconds < 60 * 1000 || __instance.Target != null || !TweakerPlugin.Instance.Config.LargeTurretBaseTweakEnabled)
                 return true;
 
             int value = 0;
@@ -79,7 +79,7 @@ namespace PerformanceTweaker.Patch
             return false;
         }
 
-        public static IEnumerable<MsilInstruction> TranspilerForAfterUpdate1<T>(IEnumerable<MsilInstruction> instructions,
+        public static IEnumerable<MsilInstruction> TranspilerForAfterUpdate1(IEnumerable<MsilInstruction> instructions,
             Func<Type, MsilLocal> __localCreator,
             MethodBase __methodBase)
         {
@@ -113,7 +113,7 @@ namespace PerformanceTweaker.Patch
             }
         }
 
-        public static IEnumerable<MsilInstruction> TranspilerForAfterUpdate10<T>(IEnumerable<MsilInstruction> instructions,
+        public static IEnumerable<MsilInstruction> TranspilerForAfterUpdate10(IEnumerable<MsilInstruction> instructions,
             Func<Type, MsilLocal> __localCreator,
             MethodBase __methodBase)
         {

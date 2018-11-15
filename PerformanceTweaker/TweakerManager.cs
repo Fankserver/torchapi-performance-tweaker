@@ -24,8 +24,8 @@ namespace PerformanceTweaker
 
             if (_ctx == null)
                 _ctx = _patchManager.AcquireContext();
-            _ctx.GetPattern(MyLargeTurretBasePatch._updateAfterSimulation).Transpilers.Add(MyLargeTurretBasePatch._transpilerForAfterUpdate1.MakeGenericMethod(typeof(MyLargeTurretBase)));
-            _ctx.GetPattern(MyLargeTurretBasePatch._updateAfterSimulation10).Transpilers.Add(MyLargeTurretBasePatch._transpilerForAfterUpdate10.MakeGenericMethod(typeof(MyLargeTurretBase)));
+            //_ctx.GetPattern(MyLargeTurretBasePatch._updateAfterSimulation).Transpilers.Add(MyLargeTurretBasePatch._transpilerForAfterUpdate1);
+            _ctx.GetPattern(MyLargeTurretBasePatch._updateAfterSimulation10).Transpilers.Add(MyLargeTurretBasePatch._transpilerForAfterUpdate10);
             _patchManager.Commit();
         }
 
