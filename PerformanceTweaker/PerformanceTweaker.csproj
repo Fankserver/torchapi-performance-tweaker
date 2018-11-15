@@ -79,6 +79,7 @@
     <Compile Include="TweakerManager.cs" />
     <Compile Include="TweakerPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TweakerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="TweakerControl.xaml">
