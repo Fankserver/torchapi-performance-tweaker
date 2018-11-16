@@ -53,12 +53,23 @@ namespace PerformanceTweaker.Patch
             else if (update == VRage.ModAPI.MyEntityUpdateEnum.EACH_10TH_FRAME)
                 value = _largeTurretBaseSlowdown10.AddOrUpdate(__instance.EntityId, 1, (key, oldValue) => ++oldValue);
 
-            if (TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactorType == 0
-                && value < (int)((Sync.ServerSimulationRatio < TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor) ? (Sync.ServerSimulationRatio / TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor) : 1) * tick)
-                return false;
-            else if (TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactorType == 1
-                && value < ((Sync.ServerCPULoad > TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor) ? (Sync.ServerCPULoad / TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor) : 1) * tick)
-                return false;
+            switch (TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactorType)
+            {
+                case 0:
+                    if (value < (int)((Sync.ServerSimulationRatio < TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor) ? (Sync.ServerSimulationRatio / TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor) : 1) * tick)
+                        return false;
+                    break;
+                case 1:
+                    if (value < ((Sync.ServerCPULoad > TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor) ? (TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor / Sync.ServerCPULoad) : 1) * tick)
+                        return false;
+                    break;
+                case 2:
+                    if (value < TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor)
+                        return false;
+                    break;
+                case 3:
+                    return false;
+            }
 
 #if DEBUG
             Log.Debug($"MyLargeTurretBase update={update.ToString()} value={value} entity={__instance.EntityId}({__instance.DisplayNameText})");

@@ -14,6 +14,8 @@
 			<ComboBox Width="120" SelectedIndex="{Binding LargeTurretBaseTweakFactorType}" Margin="3">
 				<ComboBoxItem Content="Sim Speed"/>
 				<ComboBoxItem Content="Sim CPU Load"/>
+				<ComboBoxItem Content="Static"/>
+				<ComboBoxItem Content="Disable"/>
 			</ComboBox>
 			<Label Content="Threshold type"/>
 		</StackPanel>
