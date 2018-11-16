@@ -45,9 +45,15 @@ namespace PerformanceTweaker.Patch
 
         public static bool Throttler(MyLargeTurretBase __instance, VRage.ModAPI.MyEntityUpdateEnum update, int tick)
         {
+            // Not enabled or wrongly configured
             if (!TweakerPlugin.Instance.Config.LargeTurretBaseTweakEnabled || TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor == 0f)
                 return true;
 
+            // Block is not working
+            if (!__instance.IsWorking)
+                return true;
+                
+            // Is doing some shooting
             if (__instance.Target != null || __instance.IsPlayerControlled)
             {
                 _largeTurretBaseKeepalive.AddOrUpdate(__instance.EntityId, 30, (key, oldValue) => 30);
@@ -57,7 +63,9 @@ namespace PerformanceTweaker.Patch
 #endif
                 return true;
             }
-            if (_largeTurretBaseKeepalive.TryGetValue(__instance.EntityId, out var keepalive) && keepalive > 0)
+
+            // Was doing some shooting and needs to be active until hot
+            else if (_largeTurretBaseKeepalive.TryGetValue(__instance.EntityId, out var keepalive) && keepalive > 0)
             {
                 if (update == VRage.ModAPI.MyEntityUpdateEnum.EACH_10TH_FRAME)
                 {
