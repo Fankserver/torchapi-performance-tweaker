@@ -9,6 +9,7 @@ namespace PerformanceTweaker.Patch
 {
     public class MyLargeTurretBasePatch
     {
+        private static readonly ConcurrentDictionary<long, int> _largeTurretBaseKeepalive = new ConcurrentDictionary<long, int>();
         private static readonly ConcurrentDictionary<long, int> _largeTurretBaseSlowdown1 = new ConcurrentDictionary<long, int>();
         private static readonly ConcurrentDictionary<long, int> _largeTurretBaseSlowdown10 = new ConcurrentDictionary<long, int>();
         internal static readonly MethodInfo _updateAfterSimulation =
@@ -44,8 +45,30 @@ namespace PerformanceTweaker.Patch
 
         public static bool Throttler(MyLargeTurretBase __instance, VRage.ModAPI.MyEntityUpdateEnum update, int tick)
         {
-            if (__instance.Target != null || __instance.IsPlayerControlled || !TweakerPlugin.Instance.Config.LargeTurretBaseTweakEnabled || TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor == 0f)
+            if (!TweakerPlugin.Instance.Config.LargeTurretBaseTweakEnabled || TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor == 0f)
                 return true;
+
+            if (__instance.Target != null || __instance.IsPlayerControlled)
+            {
+                _largeTurretBaseKeepalive.AddOrUpdate(__instance.EntityId, 30, (key, oldValue) => 30);
+#if DEBUG
+                if (update == VRage.ModAPI.MyEntityUpdateEnum.EACH_10TH_FRAME)
+                    Log.Debug($"MyLargeTurretBase reset keepalive update={update.ToString()} value=30 entity={__instance.EntityId}({__instance.DisplayNameText})");
+#endif
+                return true;
+            }
+            if (_largeTurretBaseKeepalive.TryGetValue(__instance.EntityId, out var keepalive) && keepalive > 0)
+            {
+                if (update == VRage.ModAPI.MyEntityUpdateEnum.EACH_10TH_FRAME)
+                {
+                    _largeTurretBaseKeepalive.TryUpdate(__instance.EntityId, keepalive - 1, keepalive);
+#if DEBUG
+                    Log.Debug($"MyLargeTurretBase decreasing keepalive update={update.ToString()} value={keepalive} entity={__instance.EntityId}({__instance.DisplayNameText})");
+#endif
+                }
+                
+                return true;
+            }
 
             int value = 0;
             if (update == VRage.ModAPI.MyEntityUpdateEnum.EACH_FRAME)
@@ -72,7 +95,7 @@ namespace PerformanceTweaker.Patch
             }
 
 #if DEBUG
-            Log.Debug($"MyLargeTurretBase update={update.ToString()} value={value} entity={__instance.EntityId}({__instance.DisplayNameText})");
+            Log.Debug($"MyLargeTurretBase pass update={update.ToString()} value={value} entity={__instance.EntityId}({__instance.DisplayNameText})");
 #endif
 
             if (update == VRage.ModAPI.MyEntityUpdateEnum.EACH_FRAME)
