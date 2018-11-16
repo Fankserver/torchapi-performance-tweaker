@@ -64,7 +64,7 @@ namespace PerformanceTweaker.Patch
                         return false;
                     break;
                 case 2:
-                    if (value * tick < TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor)
+                    if (value * (update == VRage.ModAPI.MyEntityUpdateEnum.EACH_10TH_FRAME ? 10 : 1) < TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor)
                         return false;
                     break;
                 case 3:
