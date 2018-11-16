@@ -9,6 +9,7 @@ namespace PerformanceTweaker.Patch
 {
     public class MyLargeTurretBasePatch
     {
+        private static readonly Random _rnd = new Random();
         private static readonly ConcurrentDictionary<long, int> _largeTurretBaseKeepalive = new ConcurrentDictionary<long, int>();
         private static readonly ConcurrentDictionary<long, int> _largeTurretBaseSlowdown1 = new ConcurrentDictionary<long, int>();
         private static readonly ConcurrentDictionary<long, int> _largeTurretBaseSlowdown10 = new ConcurrentDictionary<long, int>();
@@ -80,9 +81,9 @@ namespace PerformanceTweaker.Patch
 
             int value = 0;
             if (update == VRage.ModAPI.MyEntityUpdateEnum.EACH_FRAME)
-                value = _largeTurretBaseSlowdown1.AddOrUpdate(__instance.EntityId, 1, (key, oldValue) => ++oldValue);
+                value = _largeTurretBaseSlowdown1.AddOrUpdate(__instance.EntityId, _rnd.Next(1, 90), (key, oldValue) => ++oldValue);
             else if (update == VRage.ModAPI.MyEntityUpdateEnum.EACH_10TH_FRAME)
-                value = _largeTurretBaseSlowdown10.AddOrUpdate(__instance.EntityId, 1, (key, oldValue) => ++oldValue);
+                value = _largeTurretBaseSlowdown10.AddOrUpdate(__instance.EntityId, _rnd.Next(1, 9), (key, oldValue) => ++oldValue);
 
             switch (TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactorType)
             {
