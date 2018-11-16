@@ -64,7 +64,7 @@ namespace PerformanceTweaker.Patch
                         return false;
                     break;
                 case 2:
-                    if (value < TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor)
+                    if (value * tick < TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor)
                         return false;
                     break;
                 case 3:
