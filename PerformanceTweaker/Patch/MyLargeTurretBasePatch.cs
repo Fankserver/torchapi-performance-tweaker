@@ -1,13 +1,9 @@
 ﻿using NLog;
-using Sandbox;
 using Sandbox.Game.Multiplayer;
 using Sandbox.Game.Weapons;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Reflection.Emit;
-using Torch.Managers.PatchManager.MSIL;
 
 namespace PerformanceTweaker.Patch
 {
@@ -53,18 +49,20 @@ namespace PerformanceTweaker.Patch
 
             int value = 0;
             if (update == VRage.ModAPI.MyEntityUpdateEnum.EACH_FRAME)
-                value = _largeTurretBaseSlowdown1.AddOrUpdate(__instance.EntityId, 1, (key, oldValue) => oldValue++);
+                value = _largeTurretBaseSlowdown1.AddOrUpdate(__instance.EntityId, 1, (key, oldValue) => ++oldValue);
             else if (update == VRage.ModAPI.MyEntityUpdateEnum.EACH_10TH_FRAME)
-                value = _largeTurretBaseSlowdown10.AddOrUpdate(__instance.EntityId, 1, (key, oldValue) => oldValue++);
+                value = _largeTurretBaseSlowdown10.AddOrUpdate(__instance.EntityId, 1, (key, oldValue) => ++oldValue);
 
             if (TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactorType == 0
-                && Sync.ServerSimulationRatio < TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor
-                && value < (int)(Sync.ServerSimulationRatio / TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor) * tick)
+                && value < (int)((Sync.ServerSimulationRatio < TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor) ? (Sync.ServerSimulationRatio / TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor) : 1) * tick)
                 return false;
             else if (TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactorType == 1
-                && Sync.ServerCPULoad > TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor
-                && value < (Sync.ServerCPULoad / TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor) * tick)
+                && value < ((Sync.ServerCPULoad > TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor) ? (Sync.ServerCPULoad / TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor) : 1) * tick)
                 return false;
+
+#if DEBUG
+            Log.Debug($"MyLargeTurretBase update={update.ToString()} value={value} entity={__instance.EntityId}({__instance.DisplayNameText})");
+#endif
 
             if (update == VRage.ModAPI.MyEntityUpdateEnum.EACH_FRAME)
                 _largeTurretBaseSlowdown1[__instance.EntityId] = 0;
