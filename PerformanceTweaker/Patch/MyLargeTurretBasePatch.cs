@@ -44,7 +44,7 @@ namespace PerformanceTweaker.Patch
 
         public static bool Throttler(MyLargeTurretBase __instance, VRage.ModAPI.MyEntityUpdateEnum update, int tick)
         {
-            if (__instance.Target != null || !TweakerPlugin.Instance.Config.LargeTurretBaseTweakEnabled || TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor == 0f)
+            if (__instance.Target != null || __instance.IsPlayerControlled || !TweakerPlugin.Instance.Config.LargeTurretBaseTweakEnabled || TweakerPlugin.Instance.Config.LargeTurretBaseTweakFactor == 0f)
                 return true;
 
             int value = 0;
