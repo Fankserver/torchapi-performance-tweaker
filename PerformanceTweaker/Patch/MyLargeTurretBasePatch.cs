@@ -20,10 +20,10 @@ namespace PerformanceTweaker.Patch
             typeof(MyLargeTurretBase).GetMethod(nameof(MyLargeTurretBase.UpdateAfterSimulation10), BindingFlags.Instance | BindingFlags.Public) ??
             throw new Exception("Failed to find patch method");
         internal static readonly MethodInfo _throttler1 =
-            typeof(MyLargeTurretBasePatch).GetMethod(nameof(MyLargeTurretBasePatch.Throttler1), BindingFlags.Static | BindingFlags.Public) ??
+            typeof(MyLargeTurretBasePatch).GetMethod(nameof(Throttler1), BindingFlags.Static | BindingFlags.Public) ??
             throw new Exception("Failed to find patch method");
         internal static readonly MethodInfo _throttler10 =
-            typeof(MyLargeTurretBasePatch).GetMethod(nameof(MyLargeTurretBasePatch.Throttler10), BindingFlags.Static | BindingFlags.Public) ??
+            typeof(MyLargeTurretBasePatch).GetMethod(nameof(Throttler10), BindingFlags.Static | BindingFlags.Public) ??
             throw new Exception("Failed to find patch method");
 
         public static readonly Logger Log = LogManager.GetCurrentClassLogger();
