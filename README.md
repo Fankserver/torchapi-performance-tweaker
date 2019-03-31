@@ -15,7 +15,7 @@ Examples:
 - `ServerSimulationRatio = 0.5` and `Threshold = 0.8`, it will only update on each 160 ticks/ms.  
 
 **Sim CPU Load**:  
-When `ServerCPULoad` > `Threshold`, then throttle the update rate by `Threshold / ServerCPULoad`, instead of `1`.
+When `ServerCPULoad` > `Threshold`, then throttle the update rate by `Threshold / ServerCPULoad`, instead of `1`.  
 Examples:  
 - `ServerCPULoad = 10` and `Threshold = 50`, the default throttle of 100 ticks/ms is used.  
 - `ServerCPULoad = 70` and `Threshold = 50`, it will only update on each 140 ticks/ms.  
